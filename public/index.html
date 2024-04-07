@@ -1,0 +1,64 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appointment Booking</title>
+  </head>
+  <body>
+    <h1>Book an Appointment</h1>
+    <form
+      id="appointmentForm"
+      action="http://localhost:3000/submit"
+      method="POST"
+    >
+      <label for="name">Name:</label><br />
+      <input type="text" id="name" name="name" required /><br />
+      <label for="email">Email:</label><br />
+      <input type="email" id="email" name="email" required /><br />
+      <label for="phone">Phone:</label><br />
+      <input type="tel" id="phone" name="phone" required /><br />
+      <label for="datetime">Preferred Date and Time:</label><br />
+      <input
+        type="datetime-local"
+        id="datetime"
+        name="datetime"
+        required
+      /><br />
+      <label for="message">Message:</label><br />
+      <textarea id="message" name="message"></textarea><br />
+      <button type="submit">Submit</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("appointmentForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const formData = new FormData(event.target);
+          const formObject = {};
+          formData.forEach((value, key) => {
+            formObject[key] = value;
+          });
+
+          try {
+            const response = await fetch("http://localhost:3000/submit", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formObject),
+            });
+            const data = await response.json();
+            alert(data.message);
+            <!-- document.getElementById("appointmentForm").reset(); -->
+          } catch (error) {
+            console.error("Error submitting form:", error);
+            alert("An error occurred while submitting the form", error);
+          }
+        });
+    </script>
+  </body>
+</html>
